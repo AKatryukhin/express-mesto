@@ -1,5 +1,9 @@
 const User = require("../models/user");
-const ERROR_CODE_DEFAULT = 500;
+const {
+  ERROR_CODE_DEFAULT,
+  ERR_CODE_BAD_REQUEST,
+  ERR_CODE_NOT_FOUND
+} = require("../utils/constants");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -10,9 +14,8 @@ module.exports.getUsers = (req, res) => {
 };
 
 module.exports.doesUserExist = (req, res, next) => {
-  const ERROR_CODE = 404;
   if (!users[req.params.userId]) {
-    res.status(ERROR_CODE).send({ message: "Пользователь не найден" });
+    res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь не найден" });
     return;
   }
   next();
@@ -27,18 +30,16 @@ module.exports.getUserOne = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const ERROR_CODE = 400;
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send({ user }))
     .catch((err) => {
-      if(err.name === 'ValidationError') return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
+      if(err.name === 'Bad Request') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
       res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
     });
 };
 
 module.exports.updateUser = (req, res) => {
-  const ERROR_CODE = 400;
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -51,13 +52,12 @@ module.exports.updateUser = (req, res) => {
   )
     .then((user) => res.status(200).send({ user }))
     .catch((err) => {
-      if(err.name === 'ValidationError') return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы обновления профиля' });
-      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" })
-    );
+      if(err.name === 'Bad Request') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные в методы обновления профиля' });
+      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
+    });
 };
 
 module.exports.updateAvatar = (req, res) => {
-  const ERROR_CODE = 400;
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -70,7 +70,7 @@ module.exports.updateAvatar = (req, res) => {
   )
     .then((user) => res.status(200).send({ user }))
     .catch((err) => {
-      if(err.name === 'ValidationError') return res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные в методы обновления аватара' });
-      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" })
-    );
+      if(err.name === 'Bad Request') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные в методы обновления аватара' });
+      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
+    });
 };

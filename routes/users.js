@@ -8,8 +8,10 @@ router.get('/:userId', getUserOne);
 
 router.post('/', createUser);
 
+router.patch('/me', doesUserExist);
 router.patch('/me', updateUser);
 
+router.patch('/me/avatar', doesUserExist);
 router.patch('/me/avatar', updateAvatar);
 
 module.exports = router;
