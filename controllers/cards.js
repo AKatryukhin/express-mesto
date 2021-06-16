@@ -25,7 +25,6 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.doesCardExist = (req, res, next) => {
-  const ERROR_CODE = 404;
   if (!cards[req.params.cardId]) {
     res.status(ERR_CODE_NOT_FOUND).send({ message: "Карточка с указанным _id не найдена" });
     return;
