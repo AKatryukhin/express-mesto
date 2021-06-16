@@ -35,9 +35,6 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
-  if(req.user._id !== "60c88c0993c11b2b8058db0f") {
-    return res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь не найден" });
-  }
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
@@ -46,7 +43,10 @@ module.exports.updateUser = (req, res) => {
       runValidators: true, // данные будут валидированы перед изменением
     }
   )
-    .then((user) => res.status(200).send({ user }))
+  .then(user => {
+    if(!user) return res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь с указанным _id не найден" });
+    res.status(200).send(user);
+  })
     .catch((err) => {
       console.log(err.name)
       if(err.name === 'ValidationError') return res.status(ERR_CODE_VALIDATION_ERROR).send({ message: 'Переданы некорректные данные в методы обновления профиля' });
@@ -62,10 +62,12 @@ module.exports.updateAvatar = (req, res) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-      upsert: true, // если пользователь не найден, он будет создан
     }
   )
-    .then((user) => res.status(200).send({ user }))
+  .then(user => {
+    if(!user) return res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь с указанным _id не найден" });
+    res.status(200).send(user);
+  })
     .catch((err) => {
       if(err.name === 'ValidationError') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные в методы обновления аватара' });
       res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });

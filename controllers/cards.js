@@ -37,21 +37,19 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
   { new: true }
 )
-.then(card => res.status(200).send({ card }))
-.catch((err) => {
-  if(err.name === 'Bad Request') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные для постановки лайка' });
-  res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
-});
-
-
+.then(card => {
+  if(!card) return  res.status(ERR_CODE_NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки лайка'});
+  res.status(200).send({ card });
+  })
+  .catch(err => res.status(ERROR_CODE_DEFAULT).send({ message: 'На сервере произошла ошибка' }));
 
 module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: req.user._id } }, // убрать _id из массива
   { new: true }
 )
-.then(card => res.status(200).send({ card }))
-.catch((err) => {
-  if(err.name === 'Bad Request') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные для постановки лайка' });
-  res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
-});
+.then(card => {
+  if(!card) return  res.status(ERR_CODE_NOT_FOUND).send({ message: 'Переданы некорректные данные для снятия лайка'});
+  res.status(200).send({ card });
+  })
+  .catch(err => res.status(ERROR_CODE_DEFAULT).send({ message: 'На сервере произошла ошибка' }));
