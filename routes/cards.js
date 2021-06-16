@@ -5,7 +5,6 @@ router.get('/', getCards);
 
 router.post('/', createCard);
 
-router.delete('/:cardId', doesCardExist);
 router.delete('/:cardId', removeCard);
 
 router.put('/:cardId/likes', likeCard);

@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const {
   ERROR_CODE_DEFAULT,
-  ERR_CODE_BAD_REQUEST,
+  ERR_CODE_VALIDATION_ERROR,
   ERR_CODE_NOT_FOUND
 } = require("../utils/constants");
 
@@ -16,36 +16,21 @@ module.exports.createCard = (req, res) => {
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
-
   .then(card => res.status(200).send({ card }))
     .catch((err) => {
-      if(err.name === 'Bad Request') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные в методы создания карточки' });
+      if(err.name === 'ValidationError') return res.status(ERR_CODE_VALIDATION_ERROR).send({ message: 'Переданы некорректные данные в методы создания карточки' });
       res.status(ERROR_CODE_DEFAULT).send({ message: 'На сервере произошла ошибка' });
     });
 };
 
-module.exports.doesCardExist = (req, res, next) => {
-  if (!cards[req.params.cardId]) {
-    res.status(ERR_CODE_NOT_FOUND).send({ message: "Карточка с указанным _id не найдена" });
-    return;
-  }
-  next();
-};
-
 module.exports.removeCard= (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-      .then(card => res.status(200).send({ card }))
+      .then(card => {
+        if(!card) return  res.status(ERR_CODE_NOT_FOUND).send({ message: "Карточка с указанным _id не найдена"});
+        res.status(200).send({ card });
+        })
       .catch(err => res.status(ERROR_CODE_DEFAULT).send({ message: 'На сервере произошла ошибка' }));
 };
-
-// module.exports.doesLikeExist = (req, res, next) => {
-//   const ERROR_CODE = 404;
-//   if (likes[req.user._id]) {
-//     res.status(ERROR_CODE).send({ message: 'Лайк уже существует' });
-//     return;
-//   }
-//   next();
-// };
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
