@@ -13,6 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
   },
   likes: [{
+    type: String,
     default: []
   }],
   link: {
