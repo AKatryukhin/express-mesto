@@ -1,5 +1,5 @@
-const { ObjectID } = require('bson');
-const mongoose = require('mongoose');
+const { ObjectID } = require("bson");
+const mongoose = require("mongoose");
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -9,22 +9,25 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30,
   },
   owner: {
-    type: ObjectID,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
     required: true,
   },
-  likes: [{
-    type: String,
-    default: []
-  }],
+  likes: [
+    {
+      type: String,
+      default: [],
+    },
+  ],
   link: {
     type: String,
     required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
+});
 
-}, { versionKey: false });
-
-module.exports = mongoose.model('card', cardSchema);
+module.exports = mongoose.model("card", cardSchema);
+// model.findById(id).select('-__v')

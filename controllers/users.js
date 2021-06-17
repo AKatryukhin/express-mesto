@@ -2,24 +2,33 @@ const User = require("../models/user");
 const {
   ERROR_CODE_DEFAULT,
   ERR_CODE_VALIDATION_ERROR,
-  ERR_CODE_NOT_FOUND
+  ERR_CODE_NOT_FOUND,
 } = require("../utils/constants");
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-  .then((users) => res.status(200).send({ users }))
+    .then((users) => res.status(200).send({ users }))
     .catch(() =>
-      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" })
+      res
+        .status(ERROR_CODE_DEFAULT)
+        .send({ message: "На сервере произошла ошибка" })
     );
 };
 
 module.exports.getUserOne = (req, res) => {
   User.findById(req.params.userId)
-    .then(user => {
-      if(!user) return res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь с указанным _id не найден" });
+    .then((user) => {
+      if (!user)
+        return res
+          .status(ERR_CODE_NOT_FOUND)
+          .send({ message: "Пользователь с указанным _id не найден" });
       res.status(200).send(user);
     })
-    .catch(err => res.status(ERROR_CODE_DEFAULT).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) =>
+      res
+        .status(ERROR_CODE_DEFAULT)
+        .send({ message: "На сервере произошла ошибка" })
+    );
 };
 
 module.exports.createUser = (req, res) => {
@@ -28,8 +37,16 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send({ user }))
     .catch((err) => {
-      if(err.name === 'ValidationError') return res.status(ERR_CODE_VALIDATION_ERROR).send({ message: 'Переданы некорректные данные в методы создания пользователя' });
-      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
+      if (err.name === "ValidationError")
+        return res
+          .status(ERR_CODE_VALIDATION_ERROR)
+          .send({
+            message:
+              "Переданы некорректные данные в методы создания пользователя",
+          });
+      res
+        .status(ERROR_CODE_DEFAULT)
+        .send({ message: "На сервере произошла ошибка" });
     });
 };
 
@@ -43,14 +60,24 @@ module.exports.updateUser = (req, res) => {
       runValidators: true, // данные будут валидированы перед изменением
     }
   )
-  .then(user => {
-    if(!user) return res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь с указанным _id не найден" });
-    res.status(200).send(user);
-  })
+    .then((user) => {
+      if (!user)
+        return res
+          .status(ERR_CODE_NOT_FOUND)
+          .send({ message: "Пользователь с указанным _id не найден" });
+      res.status(200).send(user);
+    })
     .catch((err) => {
-      console.log(err.name)
-      if(err.name === 'ValidationError') return res.status(ERR_CODE_VALIDATION_ERROR).send({ message: 'Переданы некорректные данные в методы обновления профиля' });
-      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
+      console.log(err.name);
+      if (err.name === "ValidationError")
+        return res
+          .status(ERR_CODE_VALIDATION_ERROR)
+          .send({
+            message: "Переданы некорректные данные в методы обновления профиля",
+          });
+      res
+        .status(ERROR_CODE_DEFAULT)
+        .send({ message: "На сервере произошла ошибка" });
     });
 };
 
@@ -64,12 +91,22 @@ module.exports.updateAvatar = (req, res) => {
       runValidators: true, // данные будут валидированы перед изменением
     }
   )
-  .then(user => {
-    if(!user) return res.status(ERR_CODE_NOT_FOUND).send({ message: "Пользователь с указанным _id не найден" });
-    res.status(200).send(user);
-  })
+    .then((user) => {
+      if (!user)
+        return res
+          .status(ERR_CODE_NOT_FOUND)
+          .send({ message: "Пользователь с указанным _id не найден" });
+      res.status(200).send(user);
+    })
     .catch((err) => {
-      if(err.name === 'ValidationError') return res.status(ERR_CODE_BAD_REQUEST).send({ message: 'Переданы некорректные данные в методы обновления аватара' });
-      res.status(ERROR_CODE_DEFAULT).send({ message: "На сервере произошла ошибка" });
+      if (err.name === "ValidationError")
+        return res
+          .status(ERR_CODE_BAD_REQUEST)
+          .send({
+            message: "Переданы некорректные данные в методы обновления аватара",
+          });
+      res
+        .status(ERROR_CODE_DEFAULT)
+        .send({ message: "На сервере произошла ошибка" });
     });
 };
