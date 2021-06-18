@@ -43,6 +43,7 @@ module.exports.removeCard = (req, res) => {
         res
           .status(ERR_CODE_NOT_FOUND)
           .send({ message: 'Катрочка с указанным _id не найдена' });
+        return;
       }
       res
         .status(ERROR_CODE_DEFAULT)
@@ -61,6 +62,7 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
       res
         .status(ERR_CODE_NOT_FOUND)
         .send({ message: 'Переданы некорректные данные для постановки лайка' });
+      return;
     }
     res
       .status(ERROR_CODE_DEFAULT)
@@ -78,6 +80,7 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
       res
         .status(ERR_CODE_NOT_FOUND)
         .send({ message: 'Переданы некорректные данные для снятия лайка' });
+      return;
     }
     res
       .status(ERROR_CODE_DEFAULT)
