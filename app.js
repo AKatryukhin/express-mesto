@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
+const { login, createUser } = require('./controllers/users');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 const {
@@ -32,6 +34,9 @@ async function start() {
 //   useFindAndModify: false,
 //   useUnifiedTopology: true,
 // });
+
+app.post('/signin', login);
+app.post('/signup', createUser);
 
 app.use((req, res, next) => {
   req.user = {
