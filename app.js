@@ -25,6 +25,14 @@ async function start() {
   }
 }
 
+// app.listen(PORT);
+// mongoose.connect('mongodb://localhost:27017/mestodb', {
+//   useNewUrlParser: true,
+//   useCreateIndex: true,
+//   useFindAndModify: false,
+//   useUnifiedTopology: true,
+// });
+
 app.use((req, res, next) => {
   req.user = {
     _id: '60c88c0993c11b2b8058db0f',
