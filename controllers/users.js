@@ -50,6 +50,21 @@ module.exports.getUserOne = (req, res) => {
     });
 };
 
+module.exports.getUserMe = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res
+          .status(ERR_CODE_NOT_FOUND)
+          .send({ message: 'Пользователь с указанным _id не найден' });
+      }
+      res
+        .status(ERROR_CODE_DEFAULT)
+        .send({ message: 'На сервере произошла ошибка' });
+    });
+};
+
 module.exports.createUser = (req, res) => {
   const {
     name,
