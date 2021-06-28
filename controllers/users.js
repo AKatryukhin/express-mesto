@@ -1,9 +1,25 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   ERROR_CODE_DEFAULT,
   ERR_CODE_VALIDATION_ERROR,
   ERR_CODE_NOT_FOUND,
 } = require('../utils/constants');
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      res.send({
+        token: jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' }),
+      });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -36,15 +52,18 @@ module.exports.createUser = (req, res) => {
     email,
     password,
   } = req.body;
-
-  User.create({
-    name,
-    about,
-    avatar,
-    email,
-    password,
-  })
-    .then((user) => res.status(200).send({ user }))
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then((user) => res.status(200).send({
+      _id: user._id,
+      ...user,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERR_CODE_VALIDATION_ERROR).send({
