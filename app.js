@@ -11,12 +11,19 @@ const {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
-});
+async function start() {
+  try {
+    app.listen(PORT);
+    await mongoose.connect('mongodb://localhost:27017/mestodb', {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    });
+  } catch (error) {
+    console.error(`Init application error: ${error}`);
+  }
+}
 
 app.use((req, res, next) => {
   req.user = {
@@ -31,4 +38,4 @@ app.use((req, res) => {
   res.status(ERR_CODE_NOT_FOUND).send({ message: 'Страница не найдена' });
 });
 
-app.listen(PORT);
+start();
