@@ -7,15 +7,30 @@ const {
   ERR_CODE_NOT_FOUND,
 } = require('../utils/constants');
 
+res
+  .cookie('jwt', token, {
+        // token - наш JWT токен, который мы отправляем
+    maxAge: 3600000,
+    httpOnly: true
+  })
+  .end();
+
+
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      res.send({
-        token: jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' }),
-      });
+      const token = jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' });
+      res
+        .cookie('jwt',
+          token,
+          {
+            maxAge: 3600000 * 24 * 7,
+            httpOnly: true,
+          });
     })
+    .end()
     .catch((err) => {
       res.status(401).send({ message: err.message });
     });
