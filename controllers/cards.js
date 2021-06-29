@@ -48,7 +48,7 @@ module.exports.removeCard = (req, res) => {
         .catch((err) => {
           res
             .status(ERROR_CODE_DEFAULT)
-            .send({ message: 'Ошибка удаления карточки' });
+            .send({ message: `'Ошибка удаления карточки': ${err}` });
         });
     })
     .catch((err) => {
