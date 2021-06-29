@@ -34,13 +34,11 @@ module.exports.createCard = (req, res) => {
         .send({ message: 'На сервере произошла ошибка' });
     });
 };
-
+// if (card.owner === req.user._id) {
 module.exports.removeCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findByIdAndRemove(card._id)
     .then((card) => {
-      if (owner = req.user._id) {
-        res.status(200).send({ card });
-      }
+      res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -54,6 +52,8 @@ module.exports.removeCard = (req, res) => {
         .send({ message: 'На сервере произошла ошибка' });
     });
 };
+
+
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
