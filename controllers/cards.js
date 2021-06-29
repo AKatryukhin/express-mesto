@@ -36,11 +36,13 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.removeCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card.owner !== req.user._id) {
+      if (card.owner === req.user._id) {
         return Promise.reject(new Error('Невозможно удалить чужую карточку'));
       }
+      console.log(card._id)
+      Card.deleteOne({ _id: card._id });
       res.status(200).send({ card });
     })
     .catch((err) => {
