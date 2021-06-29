@@ -37,7 +37,11 @@ module.exports.createCard = (req, res) => {
 
 module.exports.removeCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.status(200).send({ card }))
+    .then((card) => {
+      if (owner = req.user._id) {
+        res.status(200).send({ card });
+      }
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         res

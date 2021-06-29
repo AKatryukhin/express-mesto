@@ -12,6 +12,9 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      // res.send({
+      //   token: jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' }),
+      // });
       const token = jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' });
       res
         .cookie('jwt',
@@ -19,9 +22,9 @@ module.exports.login = (req, res) => {
           {
             maxAge: 3600000 * 24 * 7,
             httpOnly: true,
-          });
+          })
+        .end();
     })
-    .end()
     .catch((err) => {
       res.status(401).send({ message: err.message });
     });
