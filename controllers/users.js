@@ -8,9 +8,9 @@ const {
 } = require('../utils/constants');
 
 module.exports.login = (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
 
-  return User.findUserByCredentials(email, password)
+  return User.findUserByCredentials({ email }).select('+password')
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' });
       res
