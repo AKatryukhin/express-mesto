@@ -34,10 +34,13 @@ module.exports.createCard = (req, res) => {
         .send({ message: 'На сервере произошла ошибка' });
     });
 };
-// if (card.owner === req.user._id) {
+
 module.exports.removeCard = (req, res) => {
-  Card.findByIdAndRemove(card._id)
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
+      if (card.owner !== req.user._id) {
+        return Promise.reject(new Error('Невозможно удалить чужую карточку'));
+      }
       res.status(200).send({ card });
     })
     .catch((err) => {
@@ -52,8 +55,6 @@ module.exports.removeCard = (req, res) => {
         .send({ message: 'На сервере произошла ошибка' });
     });
 };
-
-
 
 module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
   req.params.cardId,
