@@ -2,7 +2,6 @@ const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const AuthentificationError = require('../errors/authentification-err');
 const ValidationError = require('../errors/validation-err');
-const DuplicateError = require('../errors/not-found-err');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -60,20 +59,20 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
   })
   .catch(next);
 
-module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
+module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   req.params.cardId,
-  { $pull: { likes: req.user._id } }, // убрать _id из массива
+  { $pull: { likes: req.user._id } },
   { new: true },
 )
-  .then((card) => res.status(200).send({ card }))
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      res
-        .status(ERR_CODE_NOT_FOUND)
-        .send({ message: 'Переданы некорректные данные для снятия лайка' });
-      return;
+  .then((card) => {
+    if (!card) {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
     }
-    res
-      .status(ERROR_CODE_DEFAULT)
-      .send({ message: 'На сервере произошла ошибка' });
-  });
+    res.status(200).send({ card });
+  })
+  .catch((err) => {
+    if (err.name === 'ValidationError') {
+      throw new ValidationError('Переданы некорректные данные для снятия лайка');
+    }
+  })
+  .catch(next);

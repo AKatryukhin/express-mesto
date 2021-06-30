@@ -9,9 +9,6 @@ const { login, createUser } = require('./controllers/users');
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cookieParser());
-const {
-  ERROR_CODE_DEFAULT,
-} = require('./utils/constants');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,7 +36,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use((err, req, res, next) => {
-  const { statusCode = ERROR_CODE_DEFAULT, message } = err;
+  const { statusCode = 500, message } = err;
 
   res
     .status(statusCode)
