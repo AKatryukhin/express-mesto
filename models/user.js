@@ -23,9 +23,10 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Пожалуйста укажите email'],
     unique: true,
     validate: { validator: validator.isEmail, message: 'Invalid email.' },
+    dropDups: true,
   },
   password: {
     type: String,
