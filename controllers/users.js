@@ -37,7 +37,7 @@ module.exports.getUsers = (req, res) => {
       .send({ message: 'На сервере произошла ошибка' }));
 };
 
-module.exports.getUserOne = (req, res) => {
+module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -53,7 +53,7 @@ module.exports.getUserOne = (req, res) => {
 };
 
 module.exports.getProfile = (req, res, next) => User
-  .findById(req.user._id)
+  .findOne({ _id: req.user._id })
   .then((user) => {
     if (!user) {
       throw new NotFoundError('Пользователь с указанным _id не найден');
