@@ -29,28 +29,26 @@ module.exports.login = (req, res) => {
     });
 };
 
-module.exports.getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send({ users }))
-    .catch(() => res
-      .status(ERROR_CODE_DEFAULT)
-      .send({ message: 'На сервере произошла ошибка' }));
-};
+module.exports.getUsers = (req, res) => User
+  .find({})
+  .then((users) => res.status(200).send({ users }))
+  .catch(() => res
+    .status(ERROR_CODE_DEFAULT)
+    .send({ message: 'На сервере произошла ошибка' }));
 
-module.exports.getUserById = (req, res) => {
-  User.findById(req.params.userId)
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res
-          .status(ERR_CODE_NOT_FOUND)
-          .send({ message: 'Пользователь с указанным _id не найден' });
-      }
+module.exports.getUserById = (req, res) => User
+  .findById(req.params.userId)
+  .then((user) => res.status(200).send(user))
+  .catch((err) => {
+    if (err.name === 'CastError') {
       res
-        .status(ERROR_CODE_DEFAULT)
-        .send({ message: 'На сервере произошла ошибка' });
-    });
-};
+        .status(ERR_CODE_NOT_FOUND)
+        .send({ message: 'Пользователь с указанным _id не найден' });
+    }
+    res
+      .status(ERROR_CODE_DEFAULT)
+      .send({ message: 'На сервере произошла ошибка' });
+  });
 
 module.exports.getProfile = (req, res, next) => User
   .findOne({ _id: req.user._id })
