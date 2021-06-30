@@ -5,12 +5,14 @@ const {
   ERROR_CODE_DEFAULT,
   ERR_CODE_VALIDATION_ERROR,
   ERR_CODE_NOT_FOUND,
+  ERR_CODE_AUTH_ERROR,
 } = require('../utils/constants');
+const NotFoundError = require('../errors/not-found-err');
 
 module.exports.login = (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
 
-  return User.findUserByCredentials({ email }).select('+password')
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'very-strong-secret', { expiresIn: '7d' });
       res
@@ -50,20 +52,15 @@ module.exports.getUserOne = (req, res) => {
     });
 };
 
-module.exports.getUserMe = (req, res) => {
-  User.findById(req.user._id)
-    .then((user) => res.status(200).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res
-          .status(ERR_CODE_NOT_FOUND)
-          .send({ message: 'Пользователь с указанным _id не найден' });
-      }
-      res
-        .status(ERROR_CODE_DEFAULT)
-        .send({ message: 'На сервере произошла ошибка' });
-    });
-};
+module.exports.getProfile = (req, res, next) => User
+  .findById(req.user._id)
+  .then((user) => {
+    if (!user) {
+      throw new NotFoundError('Пользователь с указанным _id не найден');
+    }
+    res.status(200).send(user);
+  })
+  .catch(next);
 
 module.exports.createUser = (req, res) => {
   const {

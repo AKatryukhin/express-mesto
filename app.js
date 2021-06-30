@@ -10,7 +10,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cookieParser());
 const {
-  ERR_CODE_NOT_FOUND,
+  ERROR_CODE_DEFAULT,
 } = require('./utils/constants');
 
 app.use(bodyParser.json());
@@ -38,8 +38,16 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use((req, res) => {
-  res.status(ERR_CODE_NOT_FOUND).send({ message: 'Страница не найдена' });
+app.use((err, req, res, next) => {
+  const { statusCode = ERROR_CODE_DEFAULT, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
 });
 
 start();

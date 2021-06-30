@@ -4,7 +4,7 @@ const {
   getUserOne,
   updateUser,
   updateAvatar,
-  getUserMe,
+  getProfile,
 } = require('../controllers/users');
 
 router.get('/', getUsers);
@@ -13,7 +13,7 @@ router.get('/:userId', getUserOne);
 
 router.patch('/me', updateUser);
 
-router.get('/me', getUserMe);
+router.get('/me', getProfile);
 
 router.patch('/me/avatar', updateAvatar);
 
