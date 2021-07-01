@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
-
 const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
@@ -25,14 +24,14 @@ async function start() {
       useUnifiedTopology: true,
     });
   } catch (error) {
-    console.error(`Init application error: ${error}`);
+    console.log(`Init application error: ${error}`);
   }
 }
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required().min(5),
     name: Joi.string().min(2).max(30),
     avatar: Joi.string(),
     about: Joi.string().min(2).max(30),

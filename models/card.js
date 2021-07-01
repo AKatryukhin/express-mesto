@@ -23,6 +23,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    validate: { validator: (v) => /https?:\/\/[\w{1,}\W{1,}]+#?\./.test(v) },
   },
   createdAt: {
     type: Date,

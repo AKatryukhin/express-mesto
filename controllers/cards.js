@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
-const AuthentificationError = require('../errors/authentification-err');
 const ValidationError = require('../errors/validation-err');
+const CopyrightError = require('../errors/copyright-err');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -30,7 +30,7 @@ module.exports.removeCard = (req, res, next) => {
         throw new NotFoundError('Карточка с указанным _id не найдена');
       }
       if (card.owner !== req.user._id) {
-        throw new AuthentificationError('Невозможно удалить чужую карточку');
+        throw new CopyrightError('Невозможно удалить чужую карточку');
       }
       Card.deleteOne({ _id: card._id })
         .then(() => {

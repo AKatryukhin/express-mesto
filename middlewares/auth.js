@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'very-strong-secret');
   } catch (err) {
-    next(new AuthentificationError('Ошибка авторизации'));
+    next(new AuthentificationError('Передан неверный логин или пароль'));
   }
   req.user = payload;
   next();
