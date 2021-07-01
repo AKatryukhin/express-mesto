@@ -4,7 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const AuthentificationError = require('../errors/authentification-err');
 const ValidationError = require('../errors/validation-err');
-const DuplicateError = require('../errors/not-found-err');
+const DuplicateError = require('../errors/duplicate-err');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;

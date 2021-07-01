@@ -6,6 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
+const NotFoundError = require('./errors/not-found-err');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -51,6 +52,11 @@ app.use('/cards', auth, require('./routes/cards'));
 
 app.use(errors());
 
+app.use('/', (req, res, next) => {
+  next(new NotFoundError('Запрошенный маршрут не найден'));
+});
+
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
