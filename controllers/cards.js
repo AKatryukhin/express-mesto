@@ -29,7 +29,7 @@ module.exports.removeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Карточка с указанным _id не найдена');
       }
-      if (card.owner !== req.user._id) {
+      if (String(card.owner) !== req.user._id) {
         throw new CopyrightError('Невозможно удалить чужую карточку');
       }
       Card.deleteOne({ _id: card._id })
@@ -53,9 +53,10 @@ module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
     res.status(200).send({ card });
   })
   .catch((err) => {
-    if (err.name === 'ValidationError') {
+    if (err.name === 'CastError') {
       throw new ValidationError('Переданы некорректные данные для установки лайка');
     }
+    next(err);
   })
   .catch(next);
 
@@ -71,8 +72,9 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
     res.status(200).send({ card });
   })
   .catch((err) => {
-    if (err.name === 'ValidationError') {
-      throw new ValidationError('Переданы некорректные данные для снятия лайка');
+    if (err.name === 'CastError') {
+      throw new ValidationError('Переданы некорректные данные для установки лайка');
     }
+    next(err);
   })
   .catch(next);
