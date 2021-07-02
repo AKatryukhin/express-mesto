@@ -73,7 +73,7 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      throw new ValidationError('Переданы некорректные данные для установки лайка');
+      throw new ValidationError('Переданы некорректные данные для отмены лайка');
     }
     next(err);
   })
