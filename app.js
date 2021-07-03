@@ -7,6 +7,9 @@ const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./errors/not-found-err');
+const {
+  MONGO_URL,
+} = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 async function start() {
   try {
     app.listen(PORT);
-    await mongoose.connect('mongodb://localhost:27017/mestodb', {
+    await mongoose.connect(MONGO_URL, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
