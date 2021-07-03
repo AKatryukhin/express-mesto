@@ -4,6 +4,10 @@ const validator = require('validator');
 
 const mongoose = require('mongoose');
 
+const {
+  REG_LINK,
+} = require('../utils/constants');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,7 +24,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    validate: { validator: (v) => /https?:\/\/[\w{1,}\W{1,}]+#?\./.test(v) },
+    validate: { validator: (v) => REG_LINK.test(v) },
   },
   email: {
     type: String,

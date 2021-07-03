@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const {
+  REG_LINK,
+} = require('../utils/constants');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -23,7 +26,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: { validator: (v) => /https?:\/\/[\w{1,}\W{1,}]+#?\./.test(v) },
+    validate: { validator: (v) => REG_LINK.test(v) },
   },
   createdAt: {
     type: Date,
