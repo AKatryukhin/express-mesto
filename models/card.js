@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
-const {
-  REG_LINK,
-} = require('../utils/constants');
+const isURL = require('validator/lib/isURL');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -28,13 +25,8 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => {
-        validator.isURL(v, {
-          require_protocol: true,
-          require_port: true,
-        });
-        return REG_LINK.test(v);
-      },
+      validator: (v) => isURL(v),
+      message: 'адрес должен быть ссылкой',
     },
   },
   createdAt: {
