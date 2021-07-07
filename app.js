@@ -6,6 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
 const {
   MONGO_URL,
@@ -32,6 +33,8 @@ async function start() {
   }
 }
 
+app.use(requestLogger);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -52,6 +55,8 @@ app.post('/signin', celebrate({
 app.use('/users', auth, require('./routes/users'));
 
 app.use('/cards', auth, require('./routes/cards'));
+
+app.use(errorLogger);
 
 app.use(errors());
 
