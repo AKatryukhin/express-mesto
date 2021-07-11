@@ -5,14 +5,14 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
-// const cors = require('./middlewares/cors');
+const cors = require('./middlewares/cors');
 const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
 const {
   MONGO_URL,
-  allowedCors,
-  DEFAULT_ALLOWED_METHODS,
+  // allowedCors,
+  // DEFAULT_ALLOWED_METHODS,
 } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
@@ -37,25 +37,23 @@ async function start() {
 }
 
 app.use(requestLogger);
-// app.use(cors);
+app.use(cors);
 
-app.use((req, res, next) => {
-  const { origin } = req.headers;
-  const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
+// app.use((req, res, next) => {
+//   const { origin } = req.headers;
+//   const { method } = req;
+//   const requestHeaders = req.headers['access-control-request-headers'];
 
-  // if (allowedCors.includes(origin)) {
-    // res.header('Access-Control-Allow-Origin', origin);
+//   if (allowedCors.includes(origin)) {
+//     res.header('Access-Control-Allow-Origin', origin);
+//   }
+//   if (method === 'OPTIONS') {
+//     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+//     res.header('Access-Control-Allow-Headers', requestHeaders);
+//   }
 
-  // }
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-  }
-  res.header('Access-Control-Allow-Origin', '*');
-
-  next();
-});
+//   next();
+// });
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({

@@ -6,8 +6,6 @@ const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'https://mesto.front.nomoredomains.monster',
   'http://mesto.front.nomoredomains.monster',
-  // 'https://praktikum.tk',
-  'localhost:3000',
 ];
 module.exports = {
   REG_LINK,
