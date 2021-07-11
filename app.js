@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const auth = require('./middlewares/auth');
-const cors = require('./middlewares/cors');
+const corsa = require('./middlewares/corsa');
 const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
@@ -33,9 +33,8 @@ async function start() {
     console.log(`Init application error: ${error}`);
   }
 }
-
 app.use(requestLogger);
-app.use(cors);
+app.use(corsa);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
