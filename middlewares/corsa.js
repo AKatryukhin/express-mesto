@@ -14,10 +14,9 @@ module.exports = ((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true);
   }
   if (method === 'OPTIONS') {
-    res.status(200).send(
       res.header('Access-Control-Allow-Methods', ALLOWED_METHODS),
       res.header('Access-Control-Allow-Headers', requestHeaders),
-    );
+      res.status(200).send();
     return;
   }
   next();
