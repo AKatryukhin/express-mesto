@@ -17,7 +17,7 @@ module.exports = ((req, res, next) => {
     res.status(200).send(res);
     res.header('Access-Control-Allow-Methods', ALLOWED_METHODS);
     res.header('Access-Control-Allow-Headers', requestHeaders);
-    res.status(200).send(res);
+    res.status(200).send();
     return;
   }
 
