@@ -1,6 +1,6 @@
 const {
   allowedCors,
-  DEFAULT_ALLOWED_METHODS,
+  ALLOWED_METHODS,
 } = require('../utils/constants');
 
 module.exports = ((req, res, next) => {
@@ -13,7 +13,7 @@ module.exports = ((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true);
   }
   if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Methods', ALLOWED_METHODS);
     res.header('Access-Control-Allow-Headers', requestHeaders);
   }
 

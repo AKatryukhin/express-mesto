@@ -11,8 +11,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
 const {
   MONGO_URL,
-  // allowedCors,
-  // DEFAULT_ALLOWED_METHODS,
 } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
@@ -38,22 +36,6 @@ async function start() {
 
 app.use(requestLogger);
 app.use(cors);
-
-// app.use((req, res, next) => {
-//   const { origin } = req.headers;
-//   const { method } = req;
-//   const requestHeaders = req.headers['access-control-request-headers'];
-
-//   if (allowedCors.includes(origin)) {
-//     res.header('Access-Control-Allow-Origin', origin);
-//   }
-//   if (method === 'OPTIONS') {
-//     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-//     res.header('Access-Control-Allow-Headers', requestHeaders);
-//   }
-
-//   next();
-// });
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
