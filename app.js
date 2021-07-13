@@ -33,8 +33,8 @@ async function start() {
     console.log(`Init application error: ${error}`);
   }
 }
-app.use(requestLogger);
 app.use(corsa);
+app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
