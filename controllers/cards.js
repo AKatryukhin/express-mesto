@@ -42,7 +42,7 @@ module.exports.removeCard = (req, res, next) => {
 };
 
 module.exports.likeCard = (req, res, next) => Card.findByIdAndUpdate(
-  req.params,
+  req.params.cardId,
   { $addToSet: { likes: req.user._id } },
   { new: true },
 )
