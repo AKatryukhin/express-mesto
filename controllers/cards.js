@@ -69,7 +69,7 @@ module.exports.dislikeCard = (req, res, next) => Card.findByIdAndUpdate(
     if (!card) {
       throw new NotFoundError('Карточка с указанным _id не найдена');
     }
-    res.status(200).send({ card });
+    res.status(200).send(card);
   })
   .catch((err) => {
     if (err.name === 'CastError') {
