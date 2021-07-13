@@ -6,7 +6,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log(JWT_SECRET)
+
   if (!token) {
     throw new AuthentificationError('Передан неверный логин или пароль');
   }
