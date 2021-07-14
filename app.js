@@ -31,7 +31,7 @@ async function start() {
       useUnifiedTopology: true,
     });
   } catch (error) {
-    console.log(`Init application error: ${error}`);
+    throw new Error(`Init application error: ${error}`);
   }
 }
 app.use(corsa);
