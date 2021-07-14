@@ -13,6 +13,7 @@ const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { method } = require('./middlewares/url_validator');
 const NotFoundError = require('./errors/not-found-err');
+const serverError = require('./middlewares/error');
 const {
   MONGO_URL,
 } = require('./utils/constants');
@@ -82,15 +83,17 @@ app.use('/', (req, res, next) => {
 });
 
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-});
+// app.use((err, req, res, next) => {
+//   const { statusCode = 500, message } = err;
+//   res
+//     .status(statusCode)
+//     .send({
+//       message: statusCode === 500
+//         ? 'На сервере произошла ошибка'
+//         : message,
+//     });
+// });
+
+app.use((err, req, res, next) => serverError(err, req, res, next));
 
 start();
