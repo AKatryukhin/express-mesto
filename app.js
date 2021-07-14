@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-// const rateLimit = require('express-rate-limit');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -20,16 +20,15 @@ const {
 
 const { PORT = 3000 } = process.env;
 const app = express();
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 100,
-// });
+const limiter = rateLimit({
+  windowMs: 90000,
+  max: 100,
+});
 
 app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(limiter);
 
 async function start() {
   try {
@@ -45,6 +44,7 @@ async function start() {
   }
 }
 app.use(corsa);
+app.use(limiter);
 app.use(requestLogger);
 
 app.get('/crash-test', () => {
@@ -81,18 +81,6 @@ app.use(errors());
 app.use('/', (req, res, next) => {
   next(new NotFoundError('Запрошенный маршрут не найден'));
 });
-
-// eslint-disable-next-line no-unused-vars
-// app.use((err, req, res, next) => {
-//   const { statusCode = 500, message } = err;
-//   res
-//     .status(statusCode)
-//     .send({
-//       message: statusCode === 500
-//         ? 'На сервере произошла ошибка'
-//         : message,
-//     });
-// });
 
 app.use((err, req, res, next) => serverError(err, req, res, next));
 
