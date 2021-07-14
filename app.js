@@ -20,7 +20,7 @@ const {
 const { PORT = 3000 } = process.env;
 const app = express();
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 10000000,
   max: 100,
 });
 
