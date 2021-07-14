@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-// const rateLimit = require('express-rate-limit');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -19,16 +19,16 @@ const {
 
 const { PORT = 3000 } = process.env;
 const app = express();
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 10000000,
-// });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
 app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(limiter);
+app.use(limiter);
 
 async function start() {
   try {
