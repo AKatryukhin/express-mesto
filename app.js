@@ -13,6 +13,7 @@ const NotFoundError = require('./errors/not-found-err');
 const {
   MONGO_URL,
 } = require('./utils/constants');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use(cookieParser());
