@@ -2,10 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 
 const router = require('express').Router();
 
-const {
-  REG_LINK,
-} = require('../utils/constants');
-
+const { method } = require('../middlewares/url_validator');
 const {
   getUsers,
   getUserById,
@@ -27,13 +24,13 @@ router.get('/me', getProfile);
 
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userId: Joi.string().length(24).hex(),
   }),
 }), getUserById);
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(REG_LINK),
+    avatar: Joi.string().required().custom(method),
   }),
 }), updateAvatar);
 

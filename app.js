@@ -9,6 +9,7 @@ const auth = require('./middlewares/auth');
 const corsa = require('./middlewares/corsa');
 const { login, createUser } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { method } = require('./middlewares/url_validator');
 const NotFoundError = require('./errors/not-found-err');
 const {
   MONGO_URL,
@@ -48,7 +49,7 @@ app.post('/signup', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(5),
     name: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
+    avatar: Joi.string().custom(method),
     about: Joi.string().min(2).max(30),
   }).unknown(true),
 }), createUser);
