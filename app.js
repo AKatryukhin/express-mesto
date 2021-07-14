@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const auth = require('./middlewares/auth');
 const corsa = require('./middlewares/corsa');
 const { login, createUser } = require('./controllers/users');
@@ -17,10 +19,16 @@ const {
 
 const { PORT = 3000 } = process.env;
 const app = express();
-app.use(cookieParser());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
+app.use(cookieParser());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(limiter);
 
 async function start() {
   try {
