@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
+const escape = require('escape-html');
 const auth = require('./middlewares/auth');
 const corsa = require('./middlewares/corsa');
 const { login, createUser } = require('./controllers/users');
