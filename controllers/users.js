@@ -7,7 +7,7 @@ const AuthentificationError = require('../errors/authentification-err');
 const ValidationError = require('../errors/validation-err');
 const DuplicateError = require('../errors/duplicate-err');
 
-const { JWT_SECRET = 'dev-key' } = process.env;
+const { JWT_SECRET = 'dev-secret' } = process.env;
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
