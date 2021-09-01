@@ -9,6 +9,21 @@ const DuplicateError = require('../errors/duplicate-err');
 
 const { JWT_SECRET = 'dev-secret' } = process.env;
 
+module.exports.logout = (req, res, next) => {
+  const { email } = req.body;
+  return User.findOne({ email })
+    .then((user) => {
+      res
+        .clearCookie('jwt', {
+          httpOnly: true,
+          sameSite: true,
+        })
+        .status(200)
+        .send(user);
+    })
+    .catch(next);
+};
+
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 

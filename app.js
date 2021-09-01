@@ -9,7 +9,7 @@ const { errors } = require('celebrate');
 const helmet = require('helmet');
 const auth = require('./middlewares/auth');
 const corsa = require('./middlewares/corsa');
-const { login, createUser } = require('./controllers/users');
+const { login, createUser, logout } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { method } = require('./middlewares/url_validator');
 const NotFoundError = require('./errors/not-found-err');
@@ -46,6 +46,8 @@ async function start() {
 app.use(corsa);
 app.use(requestLogger);
 app.use(limiter);
+
+app.post('/signout', logout);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
