@@ -3,6 +3,7 @@ const MONGO_URL = 'mongodb://localhost:27017/mestodb';
 const ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS';
 
 const allowedCors = [
+  'http://localhost:3000',
   'https://mesto.front.nomoredomains.monster',
   'http://mesto.front.nomoredomains.monster',
 ];
