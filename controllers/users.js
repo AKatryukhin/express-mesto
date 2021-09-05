@@ -16,7 +16,7 @@ module.exports.logout = (req, res, next) => {
       res
         .clearCookie('jwt', {
           httpOnly: true,
-          sameSite: true,
+          sameSite: 'none',
         })
         .status(200)
         .send(user);
@@ -36,7 +36,7 @@ module.exports.login = (req, res, next) => {
           {
             maxAge: 3600000 * 24 * 7,
             httpOnly: true,
-            sameSite: true,
+            sameSite: 'none',
           })
         .send({
           _id: user._id,
